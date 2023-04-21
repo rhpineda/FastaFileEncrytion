@@ -41,11 +41,9 @@ GOAL
 import sys
 import gzip
 import random
+import gzip
 
-
-
-
-def caeser(seq, shift = 12):
+def caeser(seq, shift = 0):
   seq = seq.upper()
   caeserdict1 = { 
   'A':1, 'B':2, 'C':3, 'D':4, 'E':5, 'F':6, 'G':7, 'H':8, 'I':9, 'J':10,
@@ -125,6 +123,12 @@ def tl(seq, encode = True): #encode/translate
       if str(seq[i:i+3]) in decdict:
         encodedseq += decdict[str(seq[i:i+3])]
     return(encodedseq)
+def accession():
+  accession = ''.join(random.choice('ABCDEFGHIJKLMNOPQRSTUVWZYZ') \
+  for i in range(random.randint(1,3)))
+  accession += str(random.randint(10000,99999))
+  if (random.random()> 0.7): accession += ('.' + str(random.randint(1,9)))
+  return(accession)
 def header():
   dba = ['gb', 'emb', 'pir', 'sp', 'ref', 'dbj', 'prf', 'tpg', 'tpe', 'tpd', 'tr']
   info1 = ['Homo sapiens', 'A.thaliana', 'D.melanogaster', 'M.musculus', 
@@ -134,35 +138,46 @@ def header():
             "RNA polymerase 5'UTR", "unknown nuclease 3'UTR",
             'partial genome']
   #Generate Accession
-  accession = ''.join(random.choice('ABCDEFGHIJKLMNOPQRSTUVWZYZ') \
-  for i in range(random.randint(1,3)))
-  accession += str(random.randint(10000,99999))
-  if (random.random()> 0.7): accession += ('.' + str(random.randint(1,9)))
+  
   #generate Info Line
   info  = (
-    '>' + random.choice(dba) + '|'  + accession + '|' +
+    '>' + random.choice(dba) + '|'  + accession() + '|' +
     random.choice(info1) + '|' +  random.choice(info2) + '\n'
     )
   return(info)
-
-def mff(seq):
+def mff(seq, shift = 0):
   enc = ''
   encw = enc
-  enc += tl(seq,True)
+  enc += tl(caeser(seq,0), True)
   for i in range(0, len(enc), 60):
       encw += enc[i:i+60] + '\n'
-  return(header() + encw)
-#def rff(seq):
-filename = 'sequence.fna'
-with open(filename,'w') as file:
-  file.write(mff("abcdefghijklmnopqrstuvwxyz,. !adfaedqfhnluihnluihcohni4rhnewhntvgwhnretvwhnlerwtvwrhnletvhnlwerhnltvwerhnltvewrtvwretvwervtwrcohn2345c235"))
-#print(mff("abcdefghijklmnopqrstuvwxyz,. !adfaedqfhnluihnluihcohni4rhnewhntvgwhnretvwhnlerwtvwrhnletvhnlwerhnltvwerhnltvewrtvwretvwervtwrcohn2345c235"))
+  title = accession() + '00000' + str(random.randint(10000,99999)) + '.fna'
+  with open(title,'w') as file:
+    file.write(header() + encw)
+#input a seq and get out an ecrypted file 
 
+
+def rff(seq, shift = 0):
+  enc = ''
+  encr = enc
+  encr += tl(seq, False)
+  return(encr)
+
+
+#with open('sequence.fna', 'r') as file:
+#    file_contents = file.read()
+#mff(file_contents)
+with open('2.fna', 'rt') as fp:
+  seq = ''
+  for line in fp.readlines():
+    if not line.startswith('>'):
+      seq += line
+      seq = seq.replace('\n','')
+
+print(seq)
+print(rff(seq))
 #-------------------------------------------------
-seq = "abcdefghijklmnopqrstuvwxyz,. !"
-#print(tl(seq))
-seq = "GCGAATTGCGACGAGTTCGGACACATAAAAAAGCTGATGAACTGACCGCAGAGGAGCACGCCCGTATGGGGGTACCAAGTGTAGTTTGTG"
-#print(tl(seq, False))
+"abcdefghijklmnopqrstuvwxyz,. !"
 #----------------------
 #unused code
 '''
