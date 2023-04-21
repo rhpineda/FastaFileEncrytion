@@ -41,7 +41,16 @@ GOAL
 import sys
 import gzip
 import random
-import gzip
+import argparse
+
+parser = argparse.ArgumentParser(description= "Program to encode txt -> .fna")
+parser.add_argument('-s', required=True, type=str, 
+	metavar='<str>', help='file to evaluate')
+parser.add_argument('-c', required=False, type=int, default=0,
+	metavar='<int>', help='"Caeser Shift Amount", default is: 0')
+parser.add_argument('--decode', action = 'store_true', \
+  help='"Encode/Decode", default is: True, Encode')
+arg = parser.parse_args()
 
 def caeser(seq, shift = 0):
   seq = seq.upper()
@@ -145,6 +154,7 @@ def header():
     random.choice(info1) + '|' +  random.choice(info2) + '\n'
     )
   return(info)
+
 def mff(seq, shift = 0):
   enc = ''
   encw = enc
@@ -154,31 +164,28 @@ def mff(seq, shift = 0):
   title = accession() + '00000' + str(random.randint(10000,99999)) + '.fna'
   with open(title,'w') as file:
     file.write(header() + encw)
-#input a seq and get out an ecrypted file 
-
-
 def rff(seq, shift = 0):
   enc = ''
   encr = enc
   encr += tl(seq, False)
-  return(encr)
+  with open('decoded.txt','w') as file:
+    file.write(encr)
 
-
-#with open('sequence.fna', 'r') as file:
-#    file_contents = file.read()
-#mff(file_contents)
-with open('2.fna', 'rt') as fp:
-  seq = ''
-  for line in fp.readlines():
-    if not line.startswith('>'):
-      seq += line
-      seq = seq.replace('\n','')
-
-print(seq)
-print(rff(seq))
+if arg.decode == False:
+  with open(arg.s, 'r') as file:
+    file_contents = file.read()
+  mff(file_contents)
+  print("File Created")
+else:
+  with open(arg.s, 'rt') as fp:
+    seq = ''
+    for line in fp.readlines():
+      if not line.startswith('>'):
+        seq += line
+        seq = seq.replace('\n','')
+  rff(seq)
+  print("File Decoded")
 #-------------------------------------------------
-"abcdefghijklmnopqrstuvwxyz,. !"
-#----------------------
 #unused code
 '''
 def enctl(seq): #encode/translate
@@ -234,8 +241,6 @@ def dectl(seq):
     if str(seq[i:i+3]) in translatedict:
       encodedseq += translatedict[str(seq[i:i+3])]
   return(encodedseq)
-'''
-'''
 translatedict  = {
 	'A':'GCT', 'A':'GCC', 'A':'GCA', 'A':'GCG',
 	'B':'AAT', 'C':'TGT', 'C':'TGC', 'D':'GAT',
