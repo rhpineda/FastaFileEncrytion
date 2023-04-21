@@ -40,9 +40,11 @@ GOAL
 #CODE
 import sys
 import gzip
+import random
 
-#db Accession species, extr infor/brief description
-#split by pipes
+
+
+
 def caeser(seq, shift = 12):
   seq = seq.upper()
   caeserdict1 = { 
@@ -123,29 +125,44 @@ def tl(seq, encode = True): #encode/translate
       if str(seq[i:i+3]) in decdict:
         encodedseq += decdict[str(seq[i:i+3])]
     return(encodedseq)
+def header():
+  dba = ['gb', 'emb', 'pir', 'sp', 'ref', 'dbj', 'prf', 'tpg', 'tpe', 'tpd', 'tr']
+  info1 = ['Homo sapiens', 'A.thaliana', 'D.melanogaster', 'M.musculus', 
+            'Xenopus laevis', 'C.elegans', 'Saccharomyces cerevisiae']
+  info2 = ['putative transcription factor', 'norovirus', 'incomplete genome', 
+            'complete genome', "RNA polymerase III 5'UTR", 
+            "RNA polymerase 5'UTR", "unknown nuclease 3'UTR",
+            'partial genome']
+  #Generate Accession
+  accession = ''.join(random.choice('ABCDEFGHIJKLMNOPQRSTUVWZYZ') \
+  for i in range(random.randint(1,3)))
+  accession += str(random.randint(10000,99999))
+  if (random.random()> 0.7): accession += ('.' + str(random.randint(1,9)))
+  #generate Info Line
+  info  = (
+    '>' + random.choice(dba) + '|'  + accession + '|' +
+    random.choice(info1) + '|' +  random.choice(info2) + '\n'
+    )
+  return(info)
 
-
-#dbi = ['lcl', 'bbs', 'bbm', 'gi']
-#dba = ['gb', 'emb', 'pir', 'sp', 'ref', 'dbj', 'prf', 'tpg' 'tpe', 'tpd', 'tr']
-
-#accession 1-3 letters + 5 numbers, sometimes a period then [0-9]
-#
-info1 = ['Homo sapiens', 'A. thaliana', 'D. melanogaster', 'M. musculus', 
-          'Xenopus laevis', 'C. elegans', 'Saccharomyces cerevisiae']
-info2 = ['putative transcription factor', 'virus', 'incomplete genome', 
-          'complete genome', "5'UTR of RNA polymerase III", 
-          "5'UTR of RNA polymerase", "3'UTR of unknown nuclease",
-          'partial genome']
-
-#def ff(seq encode = True):
-  
-
+def mff(seq):
+  enc = ''
+  encw = enc
+  enc += tl(seq,True)
+  for i in range(0, len(enc), 60):
+      encw += enc[i:i+60] + '\n'
+  return(header() + encw)
+#def rff(seq):
+filename = 'sequence.fna'
+with open(filename,'w') as file:
+  file.write(mff("abcdefghijklmnopqrstuvwxyz,. !adfaedqfhnluihnluihcohni4rhnewhntvgwhnretvwhnlerwtvwrhnletvhnlwerhnltvwerhnltvewrtvwretvwervtwrcohn2345c235"))
+#print(mff("abcdefghijklmnopqrstuvwxyz,. !adfaedqfhnluihnluihcohni4rhnewhntvgwhnretvwhnlerwtvwrhnletvhnlwerhnltvwerhnltvewrtvwretvwervtwrcohn2345c235"))
 
 #-------------------------------------------------
 seq = "abcdefghijklmnopqrstuvwxyz,. !"
-print(tl(seq))
+#print(tl(seq))
 seq = "GCGAATTGCGACGAGTTCGGACACATAAAAAAGCTGATGAACTGACCGCAGAGGAGCACGCCCGTATGGGGGTACCAAGTGTAGTTTGTG"
-print(tl(seq, False))
+#print(tl(seq, False))
 #----------------------
 #unused code
 '''
