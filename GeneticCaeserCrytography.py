@@ -26,7 +26,7 @@
 
 '''
 GOAL
-1. Make a fake fasta file that encodes some text
+1.Make a fake fasta file that encodes some text 
   -Encode in some fake information
   -have a way to allow for multiple sequences for multiple files?
   -randomized caeser +way to decode
@@ -154,7 +154,7 @@ def header():
     random.choice(info1) + '|' +  random.choice(info2) + '\n'
     )
   return(info)
-
+#merge mff and rff
 def mff(seq, shift = 0):
   enc = ''
   encw = enc
@@ -170,7 +170,7 @@ def rff(seq, shift = 0):
   encr += tl(seq, False)
   with open('decoded.txt','w') as file:
     file.write(encr)
-
+#add way to get file name and use for decode/encode
 if arg.decode == False:
   with open(arg.s, 'r') as file:
     file_contents = file.read()
