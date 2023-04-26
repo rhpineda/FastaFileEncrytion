@@ -168,9 +168,11 @@ def rff(seq, shift = 0):
   enc = ''
   encr = enc
   encr += tl(seq, False)
-  with open('decoded.txt','w') as file:
+  with open('decoded'+str(arg.s),'w') as file:
     file.write(encr)
 #add way to get file name and use for decode/encode
+
+
 if arg.decode == False:
   with open(arg.s, 'r') as file:
     file_contents = file.read()
